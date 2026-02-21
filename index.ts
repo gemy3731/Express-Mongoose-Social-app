@@ -1,7 +1,8 @@
 import express from "express";
-import "dotenv/config";
 import bootstrap from "./src/app.controller.ts";
-
+import dotenv from "dotenv";
+dotenv.config();
+ 
 const app = express();
 
 const startServer = async () => {
