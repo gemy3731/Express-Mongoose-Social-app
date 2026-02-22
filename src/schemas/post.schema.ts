@@ -1,7 +1,8 @@
 import Joi from "joi";
 
 export const commentSchema = Joi.object({
-  body: Joi.string().required().trim().min(3).max(500).required(),
+    content: Joi.string().required().trim().min(3).max(500).required(),
+    id: Joi.string().required()
 });
 
 export const postSchema = Joi.object({
@@ -16,4 +17,4 @@ export const postSchema = Joi.object({
     path: Joi.string().required(),
     size: Joi.number().required()
   })
-});
+}).or('body', 'file');
