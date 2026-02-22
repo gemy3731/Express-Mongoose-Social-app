@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import * as postService from "../../services/post.service.ts";
 import type { AuthRequest } from "../../middlewares/auth.middleware.ts";
+import cloudinary from "../../config/cloud.config.ts";
 
 // export interface AuthRequest extends Request {
 //     user: {
@@ -35,7 +36,24 @@ export const getSinglePost = async (req: Request, res: Response) => {
   }
 };
 
-export const createPost = async (req: Request, res: Response) => {};
+export const createPost = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    const { body } = req.body;
+    const image = req.file?.path;
+    if (!user) return res.status(400).json({ error: "User not found" });
+    if (!body) return res.status(400).json({ error: "Body is required" });
+    if (!image) return res.status(400).json({ error: "Image is required" });
+
+    const file = await cloudinary.uploader.upload(image, { folder: "posts" });
+
+    const post = await postService.createPost(user.id, body, file.secure_url);
+
+    return res.status(200).json(post);
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+};
 
 export const createComment = async (req: AuthRequest, res: Response) => {
   try {

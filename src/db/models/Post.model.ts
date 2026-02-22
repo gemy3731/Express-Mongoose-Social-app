@@ -45,8 +45,6 @@ const PostSchema = new Schema<IPost>(
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
   }
 );
 
