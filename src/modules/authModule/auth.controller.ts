@@ -43,3 +43,12 @@ export const login = async (req: Request, res: Response) => {
   return res.status(500).json({ error: error.message });
 }
 };
+
+export const logout = (req: Request, res: Response) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+};
