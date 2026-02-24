@@ -1,6 +1,13 @@
 import type { Request, Response } from "express";
 import { loginUser, registerUser } from "../../services/auth.service.ts";
 
+const TOKEN_COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict" as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+};
+
 export const register = async (req: Request, res: Response) => {
   try {
     const { email, password, name, dateOfBirth, gender,rePassword } = req.body;
@@ -12,7 +19,9 @@ export const register = async (req: Request, res: Response) => {
     if(password !== rePassword) return res.status(400).json({ error: "Passwords don't match" })
   
     const data = await registerUser(req.body);
-  
+
+    res.cookie("token", data.token, TOKEN_COOKIE_OPTIONS);
+
     return res.status(201).json(data);
   }catch(error:any){
     return res.status(500).json({ error: error.message });
@@ -26,6 +35,9 @@ export const login = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Missing required fields" });
   }
   const data = await loginUser(req.body);
+
+  res.cookie("token", data.token, TOKEN_COOKIE_OPTIONS);
+
   return res.status(200).json(data);
 }catch(error:any){
   return res.status(500).json({ error: error.message });
