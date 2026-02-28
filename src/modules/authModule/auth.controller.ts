@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { loginUser, registerUser } from "../../services/auth.service.ts";
+import type { AuthRequest } from "../../middlewares/auth.middleware.ts";
 
 const TOKEN_COOKIE_OPTIONS = {
   httpOnly: true,
@@ -11,7 +12,7 @@ const TOKEN_COOKIE_OPTIONS = {
 export const register = async (req: Request, res: Response) => {
   try {
     const { email, password, name, dateOfBirth, gender,rePassword } = req.body;
-
+    
     if (!email || !password || !name || !dateOfBirth || !gender || !rePassword) {
       return res.status(400).json({ error: "Missing required fields" });
     }
@@ -51,4 +52,11 @@ export const logout = (req: Request, res: Response) => {
     sameSite: "strict",
   });
   res.status(200).json({ message: "Logged out successfully" });
+};
+
+export const getCurrentUser = (req: AuthRequest, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  res.status(200).json({ user: req.user });
 };

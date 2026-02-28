@@ -48,7 +48,7 @@ export const getSinglePost = async (postId: string) => {
 
 export const createPost = async (
   userId: string,
-  body: string,
+  body?: string,
   image?: string
 ) => {
   try {

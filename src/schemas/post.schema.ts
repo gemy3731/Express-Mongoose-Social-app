@@ -6,7 +6,7 @@ export const commentSchema = Joi.object({
 });
 
 export const postSchema = Joi.object({
-  body: Joi.string().required().trim().min(3).max(1000).required(),
+  body: Joi.string().trim().min(3).max(1000),
   file:Joi.object({
     fieldname: Joi.string().valid('image').required(),
     originalname: Joi.string().required(),

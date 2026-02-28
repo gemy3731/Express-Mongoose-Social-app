@@ -3,12 +3,10 @@ import type Joi from "joi";
 
 const validateSchema = (schema: Joi.ObjectSchema) => (req: Request, res: Response, next: NextFunction) => {
     const data = { ...req.body, ...req.params, ...req.query };
-
     if(req.file){
         data.file = req.file
     }
     
-    console.log("data", data);
     const { error } = schema.validate(data);
     if (error) {
         const errorMessage = error.details.map((detail) => detail.message).join(', ');
