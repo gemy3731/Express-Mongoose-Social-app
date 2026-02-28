@@ -11,11 +11,7 @@ const startServer = async () => {
     const port = process.env.PORT || 3000;
     app.use(
       cors({
-        origin: [
-          "http://localhost:3001",
-          "http://localhost:3000",
-          "https://nextjs-social-app-one.vercel.app",
-        ],
+        origin: process.env.FRONTEND_URL || "http://localhost:3001",
         credentials: true,
       }
     )
