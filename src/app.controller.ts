@@ -9,7 +9,7 @@ const bootstrap = async (express: typeof import("express"), app: Express) => {
   app.use(express.json());
   app.use(cookieParser());
   
-  await connectDB();
+  connectDB().catch(console.error);
 
   app.use("/auth",authRouter)
   app.use("/post",postRouter)

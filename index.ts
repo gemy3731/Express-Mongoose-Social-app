@@ -29,7 +29,8 @@ const startServer = async () => {
     app.use(cors(corsOptions));
     app.options("*", cors(corsOptions));
 
-    await bootstrap(express, app);
+    bootstrap(express, app);
+
     if (process.env.NODE_ENV !== "production") {
       const port = process.env.PORT || 3000;
       app.listen(port, () => {

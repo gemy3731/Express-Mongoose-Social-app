@@ -4,8 +4,8 @@ import type { AuthRequest } from "../../middlewares/auth.middleware.ts";
 
 const TOKEN_COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: true,
-  sameSite: "none" as const,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production"?"none" as const:"strict" as const,
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
@@ -48,8 +48,8 @@ export const login = async (req: Request, res: Response) => {
 export const logout = (req: Request, res: Response) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production"?"none":"strict",
   });
   res.status(200).json({ message: "Logged out successfully" });
 };
