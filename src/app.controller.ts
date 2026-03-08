@@ -5,7 +5,7 @@ import postRouter from "./modules/postModule/post.routes.ts";
 import cookieParser from "cookie-parser";
 
 
-const bootstrap = async (express: typeof import("express"), app: Express) => {
+const bootstrap =  (express: typeof import("express"), app: Express) => {
   app.use(express.json());
   app.use(cookieParser());
   

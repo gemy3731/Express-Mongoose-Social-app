@@ -6,55 +6,32 @@ dotenv.config();
 
 const app = express();
 
-// const allowedOrigins = [
-//   "http://localhost:3001",
-//   "https://nextjs-social-app-one.vercel.app",
-// ];
-// const corsOptions = {
-//   origin: function (
-//     origin: string | undefined,
-//     callback: (err: Error | null, allow?: boolean) => void
-//   ) {
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-//   credentials: true,
-// };
+const allowedOrigins = [
+  "http://localhost:3001",
+  "https://nextjs-social-app-one.vercel.app",
+];
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+};
 const startServer = async () => {
   try {
 
-    const allowedOrigins = [
-      "http://localhost:3001",
-      "https://nextjs-social-app-one.vercel.app",
-    ];
-    
-    // 2. Apply CORS immediately with explicit settings
-    app.use(cors({
-      origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-          callback(null, true);
-        } else {
-          callback(new Error("Not allowed by CORS"));
-        }
-      },
-      credentials: true,
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-      allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
-    }));
+
+    app.use(cors(corsOptions));
     
     // 3. MANUAL PREFLIGHT HANDLER (The "Secret Sauce")
     // This interceptor returns a 200 OK for every OPTIONS request 
     // before your database or routes even try to load.
-    app.options("*", (req, res) => {
-      res.header("Access-Control-Allow-Origin", req.headers.origin);
-      res.header("Access-Control-Allow-Credentials", "true");
-      res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-      res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Cookie");
-      res.sendStatus(200);
-    });
+    app.options("*", cors(corsOptions));
 
     bootstrap(express, app);
 
